@@ -43,8 +43,16 @@ Make a plot of **air time vs distance** (air time on the y-axis, distance on the
 ## Your code
 
 ```{r}
-# Filter flights according to the criteria above,
-# then make the required plot.
+flights |>
+  filter(distance < 2000) |>
+  filter(origin == "LGA") |>
+  ggplot(
+    mapping = aes(x=distance, y=air_time)
+  ) +
+  geom_point(na.rm = TRUE)
+  
+
+
 ```
 
 ## Brief written response
@@ -52,6 +60,8 @@ Make a plot of **air time vs distance** (air time on the y-axis, distance on the
 In 2–4 sentences, describe what you observe in the plot. (For example: Is the relationship roughly linear? Are there any clear outliers?)
 
 **Your answer here:**
+
+the airtime is surprisingly linear, on average. however, it appears that the slope would not be one, if an analysis were to be done. Travel includes less air time per mile for every mile added to the distance of the flight. This makes sense considering the time needed for take off and descent. I don' tsee major outliers, however it is interesting that there is a pretty big gap in records between 1200-1400 mile flights.
 
 ------------------------------------------------------------------------
 
@@ -63,7 +73,9 @@ Make a data frame of all rows of `flights` that have values for *both* `arr_time
 
 ```{r}
 # Create a new data frame that removes rows where arr_time or dep_time is NA.
-
+Q2flights <- flights |>
+  filter(!is.na(arr_time), !is.na(dep_time))
+View(Q2flights)
 ```
 
 ## Filtering NAs (conceptual)
@@ -74,7 +86,7 @@ Make a data frame of all rows of `flights` that have values for *both* `arr_time
 
 Explain (in words) how you could prevent those `NA` values from appearing in the plot in the first place.
 
-**Your answer here:**
+**Your answer here: using what I used in Q1, (na.rm = TRUE) removes these NA values before performing the task. I could also do what we just did in Q2 and filter out NAs myself**
 
 ------------------------------------------------------------------------
 
@@ -96,13 +108,20 @@ If you like, you may break the data out (e.g., by airline or another variable) i
 # (Hint: think carefully about units — air_time is in minutes.)
 # Then make a histogram or density plot.
 
+Q3flights <- flights |>
+  mutate(speed_mph = distance/air_time *60)
+
+Q3flights |>
+  ggplot(aes(x= speed_mph))+
+  geom_histogram()
+
 ```
 
 ## Brief written response
 
 Describe the main features of your speed distribution.
 
-**Your answer here:**
+**Your answer here: flights tend to move at 400mph. and don't range too far away from 400mph. Fastest speed reached is just over 500, and oly a flight or two really drifts to 100mph**
 
 ------------------------------------------------------------------------
 
